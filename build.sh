@@ -5,11 +5,17 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	MOUNT_POINT="/Volumes/RISCVToolchain"
 	WORK_DIR="$MOUNT_POINT/workdir"
 
+	# Check if the disk image already exists
+	if [ -f ~/RISCVToolchain.sparseimage ]; then
+	    echo "Disk image already exists."
+	fi
+
 	echo "Creating disk image..."
-	hdiutil create -size 8g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg || { echo "Error creating disk image"; exit 1; }
+	# Fix: Using the correct format for case-sensitive APFS
+	hdiutil create -size 8g -type SPARSE -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.sparseimage || { echo "Error creating disk image"; exit 1; }
 
 	echo "Mounting disk image..."
-	hdiutil attach ~/RISCVToolchain.dmg || { echo "Error mounting disk image"; exit 1; }
+	hdiutil attach ~/RISCVToolchain.sparseimage || { echo "Error mounting disk image"; exit 1; }
 
 	echo "Creating working directory..."
 	mkdir -p "$WORK_DIR" || { echo "Error creating working directory"; exit 1; }
