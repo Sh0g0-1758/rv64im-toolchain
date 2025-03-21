@@ -48,8 +48,8 @@ fi
 git clone https://github.com/riscv-collab/riscv-gnu-toolchain
 cd riscv-gnu-toolchain
 
-$SED $SED_INPLACE -i '/shallow = true/d' .gitmodules
-$SED $SED_INPLACE -i 's/--depth 1//g' Makefile.in
+$SED $SED_INPLACE '/shallow = true/d' .gitmodules
+$SED $SED_INPLACE 's/--depth 1//g' Makefile.in
 
 echo "building toolchain for host: $HOST, arch: $ARCH, abi: $ABI"
 ./configure --prefix=$PREFIX --with-cmodel=medany --disable-gdb --with-arch=$ARCH --with-abi=$ABI
