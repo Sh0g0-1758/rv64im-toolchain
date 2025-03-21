@@ -2,13 +2,22 @@
 set -e
 
 if [ "$(uname -s)" = "Darwin" ]; then
-    MOUNT_POINT="/Volumes/RISCVToolchain"
-    WORK_DIR="$MOUNT_POINT/workdir"
+	MOUNT_POINT="/Volumes/RISCVToolchain"
+	WORK_DIR="$MOUNT_POINT/workdir"
 
-    hdiutil create -size 8g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg -quiet
-    hdiutil attach ~/RISCVToolchain.dmg -quiet
-    mkdir -p "$WORK_DIR"
-    cd "$WORK_DIR"
+	echo "Creating disk image..."
+	hdiutil create -size 8g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg || { echo "Error creating disk image"; exit 1; }
+
+	echo "Mounting disk image..."
+	hdiutil attach ~/RISCVToolchain.dmg || { echo "Error mounting disk image"; exit 1; }
+
+	echo "Creating working directory..."
+	mkdir -p "$WORK_DIR" || { echo "Error creating working directory"; exit 1; }
+
+	echo "Changing to working directory..."
+	cd "$WORK_DIR" || { echo "Error changing to working directory"; exit 1; }
+
+	echo "Setup complete. Working directory is $WORK_DIR"
 else
     WORK_DIR="$(pwd)/workdir"
     mkdir -p "$WORK_DIR"
