@@ -1,8 +1,22 @@
 #!/bin/bash
 set -e
 
+if [ "$(uname -s)" = "Darwin" ]; then
+    MOUNT_POINT="/Volumes/RISCVToolchain"
+    WORK_DIR="$MOUNT_POINT/workdir"
+
+    hdiutil create -size 10g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg -quiet
+    hdiutil attach ~/RISCVToolchain.dmg -quiet
+    mkdir -p "$WORK_DIR"
+    cd "$WORK_DIR"
+else
+    WORK_DIR="$(pwd)/workdir"
+    mkdir -p "$WORK_DIR"
+    cd "$WORK_DIR"
+fi
+
 HOST=$1
-PREFIX=$PWD/.dist/$HOST
+PREFIX=$WORK_DIR/.dist/$HOST
 
 # Extract bit size from host name
 if [[ $HOST =~ riscv32im ]]; then
