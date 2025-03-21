@@ -8,11 +8,11 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	# Check if the disk image already exists
 	if [ -f ~/RISCVToolchain.sparseimage ]; then
 	    echo "Disk image already exists."
+	else
+	    echo "Creating disk image..."
+	    # Create a sparse image with a case-sensitive APFS file system
+	    hdiutil create -size 8g -fs "Case-sensitive APFS" -volname RISCVToolchain -type SPARSEIMAGE ~/RISCVToolchain.sparseimage || { echo "Error creating disk image"; exit 1; }
 	fi
-
-	echo "Creating disk image..."
-	# Fix: Using the correct format for case-sensitive APFS
-	hdiutil create -size 8g -fs "Case-sensitive APFS" -volname RISCVToolchain ~/RISCVToolchain.dmg
 
 	echo "Mounting disk image..."
 	hdiutil attach ~/RISCVToolchain.sparseimage || { echo "Error mounting disk image"; exit 1; }
