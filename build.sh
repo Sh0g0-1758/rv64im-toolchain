@@ -2,28 +2,29 @@
 set -e
 
 if [ "$(uname -s)" = "Darwin" ]; then
-	MOUNT_POINT="/Volumes/RISCVToolchain"
-	WORK_DIR="$MOUNT_POINT/workdir"
 
-	# Check if the disk image already exists
-	if [ -f ~/RISCVToolchain.sparseimage ]; then
-	    echo "Disk image already exists."
-	else
-	    echo "Creating disk image..."
-	    # Create a sparse image with a case-sensitive APFS file system
-	    hdiutil create -size 8g -fs "Case-sensitive APFS" -volname RISCVToolchain -type SPARSEIMAGE ~/RISCVToolchain.sparseimage || { echo "Error creating disk image"; exit 1; }
-	fi
+MOUNT_POINT="/Volumes/RISCVToolchain"
+WORK_DIR="$MOUNT_POINT/workdir"
 
-	echo "Mounting disk image..."
-	hdiutil attach ~/RISCVToolchain.sparseimage || { echo "Error mounting disk image"; exit 1; }
+# Check if the disk image already exists
+if [ -f ~/RISCVToolchain.sparseimage ]; then
+    echo "Disk image already exists."
+else
+    echo "Creating disk image..."
+    # Create a sparse image with a case-sensitive APFS file system
+    hdiutil create -size 8g -fs "Case-sensitive APFS" -volname RISCVToolchain -type SPARSE ~/RISCVToolchain.sparseimage || { echo "Error creating disk image"; exit 1; }
+fi
 
-	echo "Creating working directory..."
-	mkdir -p "$WORK_DIR" || { echo "Error creating working directory"; exit 1; }
+echo "Mounting disk image..."
+hdiutil attach ~/RISCVToolchain.sparseimage || { echo "Error mounting disk image"; exit 1; }
 
-	echo "Changing to working directory..."
-	cd "$WORK_DIR" || { echo "Error changing to working directory"; exit 1; }
+echo "Creating working directory..."
+mkdir -p "$WORK_DIR" || { echo "Error creating working directory"; exit 1; }
 
-	echo "Setup complete. Working directory is $WORK_DIR"
+echo "Changing to working directory..."
+cd "$WORK_DIR" || { echo "Error changing to working directory"; exit 1; }
+
+echo "Setup complete. Working directory is $WORK_DIR"
 else
     WORK_DIR="$(pwd)/workdir"
     mkdir -p "$WORK_DIR"
