@@ -5,7 +5,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
     MOUNT_POINT="/Volumes/RISCVToolchain"
     WORK_DIR="$MOUNT_POINT/workdir"
 
-    hdiutil create -size 10g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg -quiet
+    hdiutil create -size 8g -fs "APFS Case-sensitive" -volname RISCVToolchain ~/RISCVToolchain.dmg -quiet
     hdiutil attach ~/RISCVToolchain.dmg -quiet
     mkdir -p "$WORK_DIR"
     cd "$WORK_DIR"
