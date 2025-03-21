@@ -37,19 +37,12 @@ else
   SED=sed
 fi
 
-# Set in-place editing flag for sed based on OS
-if [ "$(uname -s)" = "Darwin" ]; then
-  SED_INPLACE="-i ''"
-else
-  SED_INPLACE="-i"
-fi
-
 # set up the gnu toolchain
 git clone https://github.com/riscv-collab/riscv-gnu-toolchain
 cd riscv-gnu-toolchain
 
-$SED $SED_INPLACE '/shallow = true/d' .gitmodules
-$SED $SED_INPLACE 's/--depth 1//g' Makefile.in
+$SED -i '/shallow = true/d' .gitmodules
+$SED -i 's/--depth 1//g' Makefile.in
 
 echo "building toolchain for host: $HOST, arch: $ARCH, abi: $ABI"
 ./configure --prefix=$PREFIX --with-cmodel=medany --disable-gdb --with-arch=$ARCH --with-abi=$ABI
